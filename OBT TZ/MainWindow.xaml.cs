@@ -185,10 +185,12 @@ namespace Debit
         {
             using (DbConnector db = new DbConnector())
             {
-                ocStructDb.Remove((StructDb)dbListView.SelectedItem);
-                db.money_debit.Remove((StructDb)dbListView.SelectedItem);
+                var colRemove = dbListView.SelectedItems;
+                foreach (var item in colRemove)
+                    db.money_debit.RemoveRange((StructDb)item);
                 db.SaveChanges();
             }
+            ChangeData(sender, e);
         }
 
         private void LoadImg()
