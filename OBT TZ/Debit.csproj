@@ -7,7 +7,17 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\database_add.png" />
+    <None Remove="Resources\database_delete.png" />
+    <None Remove="Resources\database_refresh.png" />
+    <None Remove="Resources\file_extension_txt.png" />
+    <None Remove="Resources\file_extension_xls.png" />
+    <None Remove="Resources\xml_exports.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Helper\XMLHelper.cs">
@@ -44,6 +54,33 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <CopyLocal>True</CopyLocal>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\database_add.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\database_delete.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\database_refresh.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\file_extension_txt.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\file_extension_xls.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\xml_exports.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\update.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

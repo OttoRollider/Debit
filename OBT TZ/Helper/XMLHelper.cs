@@ -48,7 +48,6 @@ namespace Debit.Helper
             var prop_ = structDb.GetType().GetProperties().
                 Where(
                 prop => prop.Name != "dep_code"
-                & prop.Name != "dep_code"
                     & prop.Name != "dep_code2"
                     & prop.Name != "dep_code3"
                     & prop.Name != "dep_code4"

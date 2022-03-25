@@ -1,14 +1,12 @@
 ﻿using Debit.DB;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Image = System.Drawing.Image;
 
 namespace Debit.Helper
@@ -61,76 +59,6 @@ namespace Debit.Helper
                 }
             }
         }
-
-        /// <summary>
-        /// Метод преобразования картинки в массив байт
-        /// </summary>
-        /// <param name="imageIn"></param>
-        /// <returns></returns>
-        public byte[] imageToByteArray(System.Drawing.Image imageIn)
-        {
-            MemoryStream ms = new MemoryStream();
-            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
-            return ms.ToArray();
-        }
-
-        /// <summary>
-        /// Метод преобразования массива байт в картинкиу 
-        /// </summary>
-        /// <param name="byteArrayIn"></param>
-        /// <returns></returns>
-        public static Image byteArrayToImage(byte[] byteArrayIn)
-        {
-            MemoryStream ms = new MemoryStream(byteArrayIn);
-            Image returnImage = Image.FromStream(ms);
-            return returnImage;
-        }
-
-        /// <summary>
-        /// Конвертер из выбранного формата в BitMap. Метод перегрузки
-        /// </summary>
-        /// <param name="img">Исходное изображение</param>
-        /// <param name="fic">Выбор формата</param>
-        /// <returns></returns>
-        public static BitmapImage Convert(Image img, FormatImageConverter fic)
-        {
-            ImageFormat IF = ImageFormat.Png;
-
-            switch (fic)
-            {
-                case FormatImageConverter.PNG:
-                    IF = ImageFormat.Png;
-                    break;
-                case FormatImageConverter.JPEG:
-                    IF = ImageFormat.Jpeg;
-                    break;
-                case FormatImageConverter.BMP:
-                    IF = ImageFormat.Bmp;
-                    break;
-                case FormatImageConverter.GIF:
-                    IF = ImageFormat.Gif;
-                    break;
-                case FormatImageConverter.TIFF:
-                    IF = ImageFormat.Tiff;
-                    break;
-            }
-            using (var memory = new MemoryStream())
-            {
-                img.Save(memory, IF);
-                memory.Position = 0;
-
-                var bImage = new BitmapImage();
-                bImage.BeginInit();
-                bImage.StreamSource = memory;
-
-                bImage.CacheOption = BitmapCacheOption.OnLoad;
-                bImage.DecodePixelHeight = 32;
-                bImage.DecodePixelWidth = 32;
-                bImage.EndInit();
-                return bImage;
-            }
-        }
-
 
         /// <summary>
         /// Список свойств класса StructDb

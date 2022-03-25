@@ -45,7 +45,6 @@ namespace Debit
             InitializeComponent();
             Loaded += (s, a) => {
                 ViewCtrls.mainWindow = this;
-                LoadImg();
             };
 
             tbSearch.GotFocus += (s, a) => tbSearch.Text = tbSearch.Text == "Динамический поиск" ? "" : tbSearch.Text;
@@ -192,17 +191,6 @@ namespace Debit
             }
             ChangeData(sender, e);
         }
-
-        private void LoadImg()
-        {
-            imgImport.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.file_extension_txt), FormatImageConverter.PNG);
-            imgExportXML.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.xml_exports), FormatImageConverter.PNG);
-            imgExportXLSX.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.file_extension_xls), FormatImageConverter.PNG);
-            imgAddData.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.database_add), FormatImageConverter.PNG);
-            imgChangeData.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.database_refresh), FormatImageConverter.PNG);
-            imgDeleteData.Source = InteractionCtrls.Convert(InteractionCtrls.byteArrayToImage(Properties.Resources.database_delete), FormatImageConverter.PNG);
-        }
-
 
         private void Any_TextChanged(object sender, TextChangedEventArgs e)
         {
