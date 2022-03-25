@@ -1,0 +1,42 @@
+﻿<Window x:Class="Debit.Helper.WndFilter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Debit.Helper"
+        mc:Ignorable="d"
+        Title="WndFilter" Height="260" Width="520" ResizeMode="NoResize">
+    <Grid>
+        <ComboBox x:Name="cboxTableDiff" HorizontalAlignment="Left" Margin="122,38,0,0" VerticalAlignment="Top" Width="377"
+                  SelectionChanged ="SelectFilter"
+                  ItemsSource="{Binding StructDb}"
+                  Text="Выберите"
+                  xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <sys:String>Номер счёта</sys:String>
+            <sys:String>Подразделение</sys:String>
+            <sys:String>Синт. Счёт</sys:String>
+            <sys:String>КОСГУ</sys:String>
+            <sys:String>На начало года всего</sys:String>
+            <sys:String>На начало года долгосрочная</sys:String>
+            <sys:String>На начало года просроченная</sys:String>
+            <sys:String>Увеличение задолжености всего</sys:String>
+            <sys:String>Увеличение задолжености в том числе надёжные</sys:String>
+            <sys:String>Уменьшение задолжености всего</sys:String>
+            <sys:String>Уменьшение задолжености в том числе надёжные</sys:String>
+            <sys:String>На конец отчетного периода всего</sys:String>
+            <sys:String>На конец отчетного периода долгосрочная</sys:String>
+            <sys:String>На конец отчетного периода просроченная</sys:String>
+            <sys:String>На конец аналогичного периода прошлого года всего</sys:String>
+            <sys:String>На конец аналогичного периода прошлого года долгосрочная</sys:String>
+            <sys:String>На конец аналогичного периода прошлого года просроченная</sys:String>
+        </ComboBox>
+        <Label Content="Таблица сравнения" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
+        <GroupBox x:Name="GrDep1" HorizontalAlignment="Left" VerticalAlignment="Top" Header="00000000000000000 0 00000 000" Margin="10,146,0,0" Height="41" Width="221">
+            <TextBox x:Name="tbDep1" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="207" Height="20"/>
+        </GroupBox>
+        <GroupBox x:Name="GrDep2" HorizontalAlignment="Left" VerticalAlignment="Top" Header="11111111111111111 1 11111 111" Margin="288,146,0,0" Height="41" Width="211">
+            <TextBox x:Name="tbDep2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="196" Height="20"/>
+        </GroupBox>
+        <Label x:Name="lblDifference" Content="==" HorizontalAlignment="Center" Margin="0,155,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>
