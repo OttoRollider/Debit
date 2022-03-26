@@ -16,6 +16,7 @@
     <None Remove="Resources\database_refresh.png" />
     <None Remove="Resources\file_extension_txt.png" />
     <None Remove="Resources\file_extension_xls.png" />
+    <None Remove="Resources\update.gif" />
     <None Remove="Resources\xml_exports.png" />
   </ItemGroup>
 
@@ -72,15 +73,12 @@
     <Resource Include="Resources\file_extension_xls.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\update.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\xml_exports.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Resources\update.gif">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ namespace Debit.Helper
 {
     public class XMLHelper
     {
-        private string m_path = Path.Combine(Environment.CurrentDirectory, "export.xml");
+        private string _path = Path.Combine(Environment.CurrentDirectory, "export.xml");
 
         /// <summary>
         /// Создание XML
@@ -17,12 +17,12 @@ namespace Debit.Helper
         /// <param name="path"></param>
         public void CreateXmlData(string path)
         {
-            m_path = path;
+            _path = path;
             XDocument xdoc = new XDocument(new XElement("RootXml",
                          new XElement("Report", new XAttribute("Code", "042"), new XAttribute("AlbumCode", "МЕС_К"),
                              new XElement("FormVariant", new XAttribute("Number", "1"), new XAttribute("NsiVariantCode", "0000"),
                              new XElement("Table", new XAttribute("Code", "Строка"))))));
-            xdoc.Save(m_path);
+            xdoc.Save(_path);
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace Debit.Helper
         /// <param name="path"></param>
         public async void AddXmlData(StructDb structDb, string path)
         {
-            m_path = path;
-            XDocument xdoc = XDocument.Load(m_path);
+            _path = path;
+            XDocument xdoc = XDocument.Load(_path);
             int index = 2;
 
 
@@ -62,7 +62,7 @@ namespace Debit.Helper
                 index++;
             }
 
-            xdoc.Save(m_path);
+            xdoc.Save(_path);
             await Task.Delay(50);
         }
     }

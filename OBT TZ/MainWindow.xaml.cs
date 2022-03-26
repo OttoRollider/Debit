@@ -30,13 +30,14 @@ namespace Debit
     public partial class MainWindow : Window
     {
         public readonly ObservableCollection<StructDb> ocStructDb = new ObservableCollection<StructDb>();
-        ViewCtrls viewCtrls = new();
+        
         internal CollectionView view = null;
 
+        private string _pathToSaveExcel = string.Empty;
+        private ListViewContent viewCtrls = new();
         private Application application;
         private Workbook workBook;
         private Worksheet worksheet;
-        string pathExcel = string.Empty;
 
         public MainWindow()
         {
@@ -44,7 +45,7 @@ namespace Debit
 
             InitializeComponent();
             Loaded += (s, a) => {
-                ViewCtrls.mainWindow = this;
+                ListViewContent.mainWindow = this;
             };
 
             tbSearch.GotFocus += (s, a) => tbSearch.Text = tbSearch.Text == "Динамический поиск" ? "" : tbSearch.Text;
@@ -142,7 +143,7 @@ namespace Debit
                 db.money_debit.Add(struct_hand);
                 db.SaveChanges();
 
-                foreach (var textBox in InteractionCtrls.FindLogicalChildren<TextBox>(this))
+                foreach (var textBox in InteractionCtrls.FindTextBoxes<TextBox>(this))
                 {
                     textBox.Clear();
                 }
@@ -156,7 +157,8 @@ namespace Debit
             {
                 // получаем объекты из бд и выводим в ListView
                 var debit = db.money_debit.ToList();
-                viewCtrls.AddToObserverCollection(debit);
+                viewCtrls.AddDataToObservableCollection(debit);
+                viewCtrls.AddDataToListView();
             }
 
             view = (CollectionView)CollectionViewSource.GetDefaultView(ocStructDb);
@@ -164,7 +166,7 @@ namespace Debit
 
             tbSearch.IsEnabled = true;
 
-            this.Title += $" Загруженных договоров {ocStructDb.Count}";
+            lbRowCount.Content = $"Загруженных договоров: {ocStructDb.Count}";
         }
 
         private void ImportTxt2Db(object sender, RoutedEventArgs e)
@@ -179,7 +181,7 @@ namespace Debit
                 new HelperDb().db_Import(ofd.FileNames);
 
         }
-
+        //TODO: При удалении одной добавленной записи из нескольких удаляются все. Добавленные записи одинаковые. Разобраться.
         private void RemoveData(object sender, RoutedEventArgs e)
         {
             using (DbConnector db = new DbConnector())
@@ -228,10 +230,10 @@ namespace Debit
 
             SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel table(*.xlsx)|*.xlsx|All files (*.*)|*.*" };
             if (sfd.ShowDialog().HasValue)
-                pathExcel = sfd.FileName;
+                _pathToSaveExcel = sfd.FileName;
             else return;
 
-            if (string.IsNullOrWhiteSpace(pathExcel)) return;
+            if (string.IsNullOrWhiteSpace(_pathToSaveExcel)) return;
 
             const string template = "template.xlsx";
 
@@ -282,7 +284,7 @@ namespace Debit
 
         void saveExcel()
         {
-            string savedFileName = pathExcel;
+            string savedFileName = _pathToSaveExcel;
             workBook.SaveAs(Path.Combine(Environment.CurrentDirectory, savedFileName));
             CloseExcel();
         }

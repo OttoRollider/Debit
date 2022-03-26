@@ -14,7 +14,7 @@ namespace Debit.DB
     {
         List<string> listDb = null;
 
-        Form update = new InteractionCtrls().FormUpdate((System.Drawing.Image)Resources.update);
+        Form update = new InteractionCtrls().ProgressBarInitialization((System.Drawing.Image)Resources.update);
 
         /// <summary>
         /// Метод считывания 
@@ -45,7 +45,7 @@ namespace Debit.DB
                         StructDb structDb = new StructDb();
 
                         for (int i = 0; i < s_list.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Length; i++) //Узнаем сколько разделителей и засунем в цикл
-                            structDb.GetType().GetProperty(InteractionCtrls.get_PropertyStructDb()[i].Name).SetValue(structDb, $"{s_list.Split('|')[i]}");
+                            structDb.GetType().GetProperty(InteractionCtrls.GetStructDBProperty()[i].Name).SetValue(structDb, $"{s_list.Split('|')[i]}");
 
                         db.money_debit.Add(structDb);
                         db.SaveChanges();
