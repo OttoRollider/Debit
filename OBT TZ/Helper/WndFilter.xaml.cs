@@ -1,17 +1,9 @@
 ﻿using Debit.DB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Debit.Helper
 {
@@ -32,7 +24,7 @@ namespace Debit.Helper
 
         private void SelectFilter(object sender, SelectionChangedEventArgs e)
         {
-            var PropName = InteractionCtrls.GetStructDBProperty()[cboxTableDiff.SelectedIndex].Name;
+            var PropName = DbWriter.GetStructDBProperty()[cboxTableDiff.SelectedIndex].Name;
             tbDep1.Text = structDbs[0].GetType().GetProperty(PropName).GetValue(structDbs[0]).ToString();
             tbDep2.Text = structDbs[1].GetType().GetProperty(PropName).GetValue(structDbs[1]).ToString();
 

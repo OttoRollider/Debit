@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Forms;
 using System.Windows.Input;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -34,7 +33,7 @@ namespace Debit
         internal CollectionView view = null;
 
         private string _pathToSaveExcel = string.Empty;
-        private ListViewContent viewCtrls = new();
+        private ListViewContent viewCtrls = new ListViewContent();
         private Application application;
         private Workbook workBook;
         private Worksheet worksheet;
@@ -115,7 +114,7 @@ namespace Debit
         {
             using (DbConnector db = new DbConnector())
             {
-                //// создаем объект вручную
+                // создаем объект вручную
                 StructDb struct_hand = new StructDb
                 {
                     #region Новый экземпляр класса занесённый руками
@@ -143,7 +142,7 @@ namespace Debit
                 db.money_debit.Add(struct_hand);
                 db.SaveChanges();
 
-                foreach (var textBox in InteractionCtrls.FindTextBoxes<TextBox>(this))
+                foreach (var textBox in InteractionWithView.FindTextBoxes<TextBox>(this))
                 {
                     textBox.Clear();
                 }
@@ -178,7 +177,7 @@ namespace Debit
             };
 
             if (ofd.ShowDialog().Value == true)
-                new HelperDb().db_Import(ofd.FileNames);
+                new DbWriter().ReadingTxt(ofd.FileNames, pbReadTxt, lbProgressReadTxt);
 
         }
         //TODO: При удалении одной добавленной записи из нескольких удаляются все. Добавленные записи одинаковые. Разобраться.
@@ -212,8 +211,8 @@ namespace Debit
 
             if (string.IsNullOrWhiteSpace(path)) return;
 
-            XMLHelper xMLHelper = new XMLHelper();
-            xMLHelper.CreateXmlData(path);
+            XmlCreator xMLHelper = new XmlCreator();
+            xMLHelper.CreateXml(path);
 
             foreach (var ocStruct in dbListView.Items)
                 xMLHelper.AddXmlData((StructDb)ocStruct, path);
@@ -323,11 +322,6 @@ namespace Debit
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(int hWnd, ref int lpdwProcessId);
-
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            CloseExcel();
-        }
     }
 
 

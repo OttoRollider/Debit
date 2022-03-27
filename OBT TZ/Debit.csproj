@@ -16,12 +16,11 @@
     <None Remove="Resources\database_refresh.png" />
     <None Remove="Resources\file_extension_txt.png" />
     <None Remove="Resources\file_extension_xls.png" />
-    <None Remove="Resources\update.gif" />
     <None Remove="Resources\xml_exports.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Helper\XMLHelper.cs">
+    <Compile Update="Helper\XmlCreator.cs">
       <Generator>MSBuild:Compile</Generator>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -71,9 +70,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\file_extension_xls.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\update.gif">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\xml_exports.png">

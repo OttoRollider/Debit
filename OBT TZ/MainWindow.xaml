@@ -175,5 +175,7 @@
             </Grid>
         </Expander>
         <Label x:Name="lbRowCount" Content="Загруженных договоров: 0" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top"/>
+        <ProgressBar x:Name="pbReadTxt" HorizontalAlignment="Left" Height="18" Margin="309,62,0,0" VerticalAlignment="Top" Width="127"/>
+        <Label x:Name="lbProgressReadTxt" HorizontalAlignment="Left" Margin="180,58,0,0" VerticalAlignment="Top" Content=""/>
     </Grid>
 </Window>
