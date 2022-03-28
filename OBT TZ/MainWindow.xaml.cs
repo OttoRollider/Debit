@@ -28,15 +28,14 @@ namespace Debit
     /// </summary>
     public partial class MainWindow : Window
     {
-        public readonly ObservableCollection<StructDb> ocStructDb = new ObservableCollection<StructDb>();
-        
-        internal CollectionView view = null;
-
+        private CollectionView view = null;
+        private ListViewContent _listViewContent = new ListViewContent();
         private string _pathToSaveExcel = string.Empty;
-        private ListViewContent viewCtrls = new ListViewContent();
-        private Application application;
-        private Workbook workBook;
-        private Worksheet worksheet;
+        private Application _application;
+        private Workbook _workBook;
+        private Worksheet _worksheet;
+
+        public readonly ObservableCollection<StructDb> ocStructDb = new ObservableCollection<StructDb>();
 
         public MainWindow()
         {
@@ -109,7 +108,6 @@ namespace Debit
                 return ((item as StructDb).fdep_code.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
-
         private void AddData(object sender, RoutedEventArgs e)
         {
             using (DbConnector db = new DbConnector())
@@ -156,10 +154,10 @@ namespace Debit
             {
                 // получаем объекты из бд и выводим в ListView
                 var debit = db.money_debit.ToList();
-                viewCtrls.AddDataToObservableCollection(debit);
-                viewCtrls.AddDataToListView();
+                _listViewContent.AddDataToObservableCollection(debit);
+                _listViewContent.AddDataToListView();
             }
-
+            //TODO: Разобраться с CollectionViewSource и CollectionView. Может стоит создать сразу экземпляр класса CollectionViewSource, а не CollectionView
             view = (CollectionView)CollectionViewSource.GetDefaultView(ocStructDb);
             view.Filter = DataBaseFilter;
 
@@ -241,37 +239,37 @@ namespace Debit
             using (System.IO.Compression.GZipStream gz = new System.IO.Compression.GZipStream(fileOut, System.IO.Compression.CompressionMode.Decompress))
                 gz.CopyTo(fileSave);
 
-            application = new Application
+            _application = new Application
             {
                 Visible = false,
                 DisplayAlerts = false
             };
 
-            workBook = application.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, template));
-            worksheet = workBook.ActiveSheet as Worksheet;
+            _workBook = _application.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, template));
+            _worksheet = _workBook.ActiveSheet as Worksheet;
 
 
             int index = 7;
 
             foreach (var item in dbListView.Items)
             {
-                Range line = (Range)worksheet.Rows[index];
+                Range line = (Range)_worksheet.Rows[index];
                 line.Insert();
 
-                worksheet.Range[$"A{index}"].Value = (item as StructDb).fdep_code;
-                worksheet.Range[$"B{index}"].Value = (item as StructDb).start_year_full;
-                worksheet.Range[$"C{index}"].Value = (item as StructDb).start_year_long_term;
-                worksheet.Range[$"D{index}"].Value = (item as StructDb).start_year_overdue;
-                worksheet.Range[$"E{index}"].Value = (item as StructDb).increase_full;
-                worksheet.Range[$"F{index}"].Value = (item as StructDb).increase_nonmoney;
-                worksheet.Range[$"G{index}"].Value = (item as StructDb).decrease_full;
-                worksheet.Range[$"H{index}"].Value = (item as StructDb).decrease_nonmoney;
-                worksheet.Range[$"I{index}"].Value = (item as StructDb).end_report_period_full;
-                worksheet.Range[$"J{index}"].Value = (item as StructDb).end_report_period_long_term;
-                worksheet.Range[$"K{index}"].Value = (item as StructDb).end_report_period_overdue;
-                worksheet.Range[$"L{index}"].Value = (item as StructDb).end_previous_period_full;
-                worksheet.Range[$"M{index}"].Value = (item as StructDb).end_previous_period_long_term;
-                worksheet.Range[$"N{index}"].Value = (item as StructDb).end_previous_period_overdue;
+                _worksheet.Range[$"A{index}"].Value = (item as StructDb).fdep_code;
+                _worksheet.Range[$"B{index}"].Value = (item as StructDb).start_year_full;
+                _worksheet.Range[$"C{index}"].Value = (item as StructDb).start_year_long_term;
+                _worksheet.Range[$"D{index}"].Value = (item as StructDb).start_year_overdue;
+                _worksheet.Range[$"E{index}"].Value = (item as StructDb).increase_full;
+                _worksheet.Range[$"F{index}"].Value = (item as StructDb).increase_nonmoney;
+                _worksheet.Range[$"G{index}"].Value = (item as StructDb).decrease_full;
+                _worksheet.Range[$"H{index}"].Value = (item as StructDb).decrease_nonmoney;
+                _worksheet.Range[$"I{index}"].Value = (item as StructDb).end_report_period_full;
+                _worksheet.Range[$"J{index}"].Value = (item as StructDb).end_report_period_long_term;
+                _worksheet.Range[$"K{index}"].Value = (item as StructDb).end_report_period_overdue;
+                _worksheet.Range[$"L{index}"].Value = (item as StructDb).end_previous_period_full;
+                _worksheet.Range[$"M{index}"].Value = (item as StructDb).end_previous_period_long_term;
+                _worksheet.Range[$"N{index}"].Value = (item as StructDb).end_previous_period_overdue;
 
 
                 index++;
@@ -281,10 +279,10 @@ namespace Debit
             Topmost = true;
         }
 
-        void saveExcel()
+        private void saveExcel()
         {
             string savedFileName = _pathToSaveExcel;
-            workBook.SaveAs(Path.Combine(Environment.CurrentDirectory, savedFileName));
+            _workBook.SaveAs(Path.Combine(Environment.CurrentDirectory, savedFileName));
             CloseExcel();
         }
 
@@ -293,20 +291,20 @@ namespace Debit
         /// </summary>
         private void CloseExcel()
         {
-            if (application != null)
+            if (_application != null)
             {
 
 
                 int excelProcessId = -1;
-                GetWindowThreadProcessId(application.Hwnd, ref excelProcessId);
+                GetWindowThreadProcessId(_application.Hwnd, ref excelProcessId);
 
-                Marshal.ReleaseComObject(worksheet);
-                workBook.Close();
-                Marshal.ReleaseComObject(workBook);
-                application.Quit();
-                Marshal.ReleaseComObject(application);
+                Marshal.ReleaseComObject(_worksheet);
+                _workBook.Close();
+                Marshal.ReleaseComObject(_workBook);
+                _application.Quit();
+                Marshal.ReleaseComObject(_application);
 
-                application = null;
+                _application = null;
                 // Прибиваем висящий процесс
                 try
                 {
@@ -323,6 +321,4 @@ namespace Debit
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(int hWnd, ref int lpdwProcessId);
     }
-
-
 }
