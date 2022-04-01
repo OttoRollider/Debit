@@ -8,13 +8,13 @@ namespace Debit.Helper
         public static MainWindow mainWindow { get; set; }
 
         /// <summary>
-        /// Метод добавления данных в коллекцию Obsrver
+        /// Метод добавления данных в ObservableCollection
         /// </summary>
         /// <param name="dbData"></param>
         public void AddDataToObservableCollection(List<StructDb> dbData)
         {
             foreach (var line in dbData)
-                mainWindow.ocStructDb.Add(line);
+                mainWindow.DbDataCollection.Add(line);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Debit.Helper
         /// <returns></returns>
         public void AddDataToListView()
         {
-            mainWindow.dbListView.ItemsSource = mainWindow.ocStructDb;
+            mainWindow.dbListView.ItemsSource = mainWindow.DbDataCollection;
         }
     }
 }

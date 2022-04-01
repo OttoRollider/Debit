@@ -28,14 +28,14 @@ namespace Debit
     /// </summary>
     public partial class MainWindow : Window
     {
-        private CollectionView view = null;
+        private CollectionView _collectionView = null;
         private ListViewContent _listViewContent = new ListViewContent();
         private string _pathToSaveExcel = string.Empty;
         private Application _application;
         private Workbook _workBook;
         private Worksheet _worksheet;
 
-        public readonly ObservableCollection<StructDb> ocStructDb = new ObservableCollection<StructDb>();
+        public readonly ObservableCollection<StructDb> DbDataCollection = new ObservableCollection<StructDb>();
 
         public MainWindow()
         {
@@ -48,52 +48,54 @@ namespace Debit
 
             tbSearch.GotFocus += (s, a) => tbSearch.Text = tbSearch.Text == "Динамический поиск" ? "" : tbSearch.Text;
             tbSearch.LostFocus += (s, a) => tbSearch.Text = string.IsNullOrWhiteSpace(tbSearch.Text) ? "Динамический поиск" : tbSearch.Text;
-            tbSearch.Loaded += (s, a) => tbSearch.IsEnabled = ocStructDb.Count > 0 ? true : false;
+            tbSearch.Loaded += (s, a) => tbSearch.IsEnabled = DbDataCollection.Count > 0 ? true : false;
 
             tbSearch.TextChanged += (s, a) => CollectionViewSource.GetDefaultView(dbListView.ItemsSource).Refresh();
 
             dbListView.MouseRightButtonUp += ContextMenu;
-
         }
 
+        //TODO:Метод ничего не сортирует. Доработать.
         private void SortHeaderClick(object sender, RoutedEventArgs e)
         {
-            var pos = PointToScreen(Mouse.GetPosition(this));
+            var position = PointToScreen(Mouse.GetPosition(this));
             var column = ((GridViewColumnHeader)e.OriginalSource).Column.Header.ToString();
 
         }
 
         private void ContextMenu(object sender, MouseButtonEventArgs e)
         {
-            var FocusItem = e.OriginalSource as StructDb;
+            var focusItem = e.OriginalSource as StructDb;
 
             int countSelected = dbListView.SelectedItems.Count;
 
             try
             {
                 //Добавляем контекстное меню
-                MenuItem ShowCompare = new MenuItem();
-                ShowCompare.Header = $"Сравнить данные";
-                ShowCompare.Click += (@sender, @event) =>
+                MenuItem showComparison = new MenuItem();
+                showComparison.Header = "Сравнить данные";
+                showComparison.Click += (@sender, @event) =>
                 {
                     List<StructDb> list = new List<StructDb>();
                     var items = dbListView.SelectedItems;
+
                     foreach (var item in items)
                         list.Add((StructDb)item);
-                    var pos = PointToScreen(Mouse.GetPosition(this));
-                    WndFilter wf = new WndFilter(list);
-                    wf.Left = pos.X;
-                    wf.Top = pos.Y;
-                    wf.ShowDialog();
+
+                    var position = PointToScreen(Mouse.GetPosition(this));
+                    FilterWindow filterWindow = new FilterWindow(list);
+                    filterWindow.Left = position.X;
+                    filterWindow.Top = position.Y;
+                    filterWindow.ShowDialog();
                 };
-                ShowCompare.IsEnabled = countSelected == 2 ? true : false;
+                showComparison.IsEnabled = countSelected == 2 ? true : false;
 
                 MenuItem ShowDel = new MenuItem();
                 ShowDel.Header = "Удалить";
                 ShowDel.Click += (@sender, @event) => RemoveData(@sender, @event);
 
                 ContextMenu cm = new ContextMenu();
-                cm.Items.Add(ShowCompare);
+                cm.Items.Add(showComparison);
                 cm.Items.Add(ShowDel);
                 cm.IsOpen = true;
             }
@@ -110,10 +112,10 @@ namespace Debit
 
         private void AddData(object sender, RoutedEventArgs e)
         {
-            using (DbConnector db = new DbConnector())
+            using (DbConnector dbConnector = new DbConnector())
             {
                 // создаем объект вручную
-                StructDb struct_hand = new StructDb
+                StructDb structDb = new StructDb
                 {
                     #region Новый экземпляр класса занесённый руками
                     dep_code = tb_dep_code.Text,
@@ -137,8 +139,8 @@ namespace Debit
                 };
 
                 // добавляем бд
-                db.money_debit.Add(struct_hand);
-                db.SaveChanges();
+                dbConnector.money_debit.Add(structDb);
+                dbConnector.SaveChanges();
 
                 foreach (var textBox in InteractionWithView.FindTextBoxes<TextBox>(this))
                 {
@@ -147,51 +149,50 @@ namespace Debit
             }
         }
 
-        private void ChangeData(object sender, RoutedEventArgs e)
+        private void UpdateData(object sender, RoutedEventArgs e)
         {
-            ocStructDb.Clear();
-            using (DbConnector db = new DbConnector())
+            DbDataCollection.Clear();
+            using (DbConnector dbConnector = new DbConnector())
             {
                 // получаем объекты из бд и выводим в ListView
-                var debit = db.money_debit.ToList();
+                var debit = dbConnector.money_debit.ToList();
                 _listViewContent.AddDataToObservableCollection(debit);
                 _listViewContent.AddDataToListView();
             }
             //TODO: Разобраться с CollectionViewSource и CollectionView. Может стоит создать сразу экземпляр класса CollectionViewSource, а не CollectionView
-            view = (CollectionView)CollectionViewSource.GetDefaultView(ocStructDb);
-            view.Filter = DataBaseFilter;
+            _collectionView = (CollectionView)CollectionViewSource.GetDefaultView(DbDataCollection);
+            _collectionView.Filter = DataBaseFilter;
 
             tbSearch.IsEnabled = true;
 
-            lbRowCount.Content = $"Загруженных договоров: {ocStructDb.Count}";
+            lbRowCount.Content = $"Загруженных договоров: {DbDataCollection.Count}";
         }
 
-        private void ImportTxt2Db(object sender, RoutedEventArgs e)
+        private void ImportTxt(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog()
+            OpenFileDialog openFileDialog = new OpenFileDialog()
             {
                 Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
                 Multiselect = true
             };
 
-            if (ofd.ShowDialog().Value == true)
-                new DbWriter().ReadingTxt(ofd.FileNames, pbReadTxt, lbProgressReadTxt);
-
+            if (openFileDialog.ShowDialog().Value == true)
+                new DbWriter().ReadingTxt(openFileDialog.FileNames, pbReadTxt, lbProgressReadTxt);
         }
         //TODO: При удалении одной добавленной записи из нескольких удаляются все. Добавленные записи одинаковые. Разобраться.
         private void RemoveData(object sender, RoutedEventArgs e)
         {
-            using (DbConnector db = new DbConnector())
+            using (DbConnector dbConnector = new DbConnector())
             {
-                var colRemove = dbListView.SelectedItems;
-                foreach (var item in colRemove)
-                    db.money_debit.RemoveRange((StructDb)item);
-                db.SaveChanges();
+                var selectedLines = dbListView.SelectedItems;
+                foreach (var line in selectedLines)
+                    dbConnector.money_debit.RemoveRange((StructDb)line);
+                dbConnector.SaveChanges();
             }
-            ChangeData(sender, e);
+            UpdateData(sender, e);
         }
 
-        private void Any_TextChanged(object sender, TextChangedEventArgs e)
+        private void OnTextChange(object sender, TextChangedEventArgs e)
         {
             (sender as TextBox).Text = (sender as TextBox)?.Text.Replace('.', ',');
             (sender as TextBox).CaretIndex = (sender as TextBox).Text.Length;
@@ -200,20 +201,20 @@ namespace Debit
         private void ExportXML(object sender, RoutedEventArgs e)
         {
             string path = string.Empty;
-            if (ocStructDb.Count < 1) return;
+            if (DbDataCollection.Count < 1) return;
 
-            SaveFileDialog sfd = new SaveFileDialog() { Filter = "xml table(*.xml)|*.xml|All files (*.*)|*.*" };
-            if (sfd.ShowDialog().HasValue)
-                path = sfd.FileName;
+            SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "xml table(*.xml)|*.xml|All files (*.*)|*.*" };
+            if (saveFileDialog.ShowDialog().HasValue)
+                path = saveFileDialog.FileName;
             else return;
 
             if (string.IsNullOrWhiteSpace(path)) return;
 
-            XmlCreator xMLHelper = new XmlCreator();
-            xMLHelper.CreateXml(path);
+            XmlCreator xmlCreator = new XmlCreator();
+            xmlCreator.CreateXml(path);
 
-            foreach (var ocStruct in dbListView.Items)
-                xMLHelper.AddXmlData((StructDb)ocStruct, path);
+            foreach (var item in dbListView.Items)
+                xmlCreator.AddXmlData((StructDb)item, path);
 
             MessageBoxResult result = MessageBox.Show("Экспорт XML выполнен!\rОткрыть файл?", "Выполнено", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
@@ -225,9 +226,9 @@ namespace Debit
         private void ExportExcel(object sender, RoutedEventArgs e)
         {
 
-            SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel table(*.xlsx)|*.xlsx|All files (*.*)|*.*" };
-            if (sfd.ShowDialog().HasValue)
-                _pathToSaveExcel = sfd.FileName;
+            SaveFileDialog saveFileDialog = new SaveFileDialog() { Filter = "Excel table(*.xlsx)|*.xlsx|All files (*.*)|*.*" };
+            if (saveFileDialog.ShowDialog().HasValue)
+                _pathToSaveExcel = saveFileDialog.FileName;
             else return;
 
             if (string.IsNullOrWhiteSpace(_pathToSaveExcel)) return;
@@ -247,7 +248,6 @@ namespace Debit
 
             _workBook = _application.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, template));
             _worksheet = _workBook.ActiveSheet as Worksheet;
-
 
             int index = 7;
 
@@ -271,7 +271,6 @@ namespace Debit
                 _worksheet.Range[$"M{index}"].Value = (item as StructDb).end_previous_period_long_term;
                 _worksheet.Range[$"N{index}"].Value = (item as StructDb).end_previous_period_overdue;
 
-
                 index++;
             }
 
@@ -293,8 +292,6 @@ namespace Debit
         {
             if (_application != null)
             {
-
-
                 int excelProcessId = -1;
                 GetWindowThreadProcessId(_application.Hwnd, ref excelProcessId);
 

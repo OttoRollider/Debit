@@ -8,13 +8,13 @@
         mc:Ignorable="d"
         Title="БД дебиторской и кредитной задолжености." Height="720" Width="1280" OpacityMask="Black" Background="#FFEEF5FD">
 
-    <Grid Margin="0,10,0,0">
+    <Grid x:Name="mainGrid" Margin="0,10,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="23*"/>
             <ColumnDefinition Width="27*"/>
         </Grid.ColumnDefinitions>
         <ToolBar HorizontalAlignment="Left" Height="36" VerticalAlignment="Top" Width="780" Grid.ColumnSpan="2" Margin="10,10,0,0">
-            <Button Width="28" Click="ImportTxt2Db">
+            <Button Width="28" Click="ImportTxt">
                 <Image  x:Name="imgImport" Width="23" Height="24" Source="./Resources/file_extension_txt.png"/>
                 <Button.ToolTip>
                     Импортировать данные в БД
@@ -42,7 +42,7 @@
                 <Image x:Name="imgAddData" Width="23" Height="24" Source="./Resources/database_add.png"/>
             </Button>
             <Separator/>
-            <Button Width="28" Click="ChangeData">
+            <Button Width="28" Click="UpdateData">
                 <Button.ToolTip>
                     Обновить табличные данные
                 </Button.ToolTip>
@@ -122,7 +122,7 @@
 
 
         <Expander x:Name="expander_hand" Header="Занести данные вручную" Margin="10,361,10,10" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
-            <Grid Background="#FFE5E5E5" Margin="0,14,0,0" Height="246" HorizontalAlignment="Stretch">
+            <Grid x:Name="tbGrid" Background="#FFE5E5E5" Margin="0,14,0,0" Height="246" HorizontalAlignment="Stretch">
                 <TextBox x:Name="tb_dep_code" HorizontalAlignment="Left" Margin="79,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                 <TextBox x:Name="tb_dep_code2" HorizontalAlignment="Left" Margin="204,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="18"/>
                 <TextBox x:Name="tb_dep_code3" HorizontalAlignment="Left" Margin="227,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="45"/>
@@ -134,9 +134,9 @@
 
                 <GroupBox Header="Сумма задолжности на начало года" Margin="0,81,0,113" BorderBrush="#FF116EA5" HorizontalAlignment="Left" Width="400" >
                     <Grid>
-                        <TextBox x:Name="tb_start_year_full" Margin="10,6,278,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_start_year_long_term" Margin="144,6,144,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_start_year_overdue" Margin="278,6,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="Any_TextChanged"/>
+                        <TextBox x:Name="tb_start_year_full" Margin="10,6,278,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_start_year_long_term" Margin="144,6,144,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_start_year_overdue" Margin="278,6,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="OnTextChange"/>
 
                     </Grid>
                 </GroupBox>
@@ -147,28 +147,28 @@
                         <Label Content="Уменьшение" Margin="330,16,45,0" VerticalAlignment="Top" Foreground="#FF8E0606" HorizontalContentAlignment="Center"/>
                         <Label Content="Всего:" Margin="10,40,441,0" VerticalAlignment="Top" Width="44"/>
                         <Label Content="В том числе неденежные:" Margin="10,79,341,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tb_increase_full"  Margin="159,44,216,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_increase_nonmoney"  Margin="159,83,216,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_decrease_full"  Margin="330,44,45,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_decrease_nonmoney"  Margin="330,83,45,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="Any_TextChanged"/>
+                        <TextBox x:Name="tb_increase_full"  Margin="159,44,216,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_increase_nonmoney"  Margin="159,83,216,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_decrease_full"  Margin="330,44,45,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_decrease_nonmoney"  Margin="330,83,45,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="OnTextChange"/>
 
                     </Grid>
                 </GroupBox>
 
                 <GroupBox Header="на конец отчетного периода" Margin="0,137,0,67" BorderBrush="#FF068ADA" HorizontalAlignment="Left" Width="400">
                     <Grid>
-                        <TextBox x:Name="tb_end_report_period_full"  Margin="10,0,278,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_end_report_period_long_term"  Margin="144,0,144,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_end_report_period_overdue"  Margin="278,0,10,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="Any_TextChanged"/>
+                        <TextBox x:Name="tb_end_report_period_full"  Margin="10,0,278,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_end_report_period_long_term"  Margin="144,0,144,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_end_report_period_overdue"  Margin="278,0,10,0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="OnTextChange"/>
 
                     </Grid>
                 </GroupBox>
 
                 <GroupBox Header="на конец аналогичного периода прошлого финансового года" Margin="0,184,0,10" BorderBrush="#FF1185CA" HorizontalAlignment="Left" Width="400">
                     <Grid>
-                        <TextBox x:Name="tb_end_previous_period_full" HorizontalAlignment="Left" VerticalAlignment="Top"  TextWrapping="Wrap" Margin="10,12,0,0" Width="100" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_end_previous_period_long_term" HorizontalAlignment="Center" VerticalAlignment="Top"  TextWrapping="Wrap" Margin="0,12,0,0" Width="100" TextChanged="Any_TextChanged"/>
-                        <TextBox x:Name="tb_end_previous_period_overdue" HorizontalAlignment="Left"  VerticalAlignment="Top"  TextWrapping="Wrap" Margin="278,12,0,0" Width="100" TextChanged="Any_TextChanged"/>
+                        <TextBox x:Name="tb_end_previous_period_full" HorizontalAlignment="Left" VerticalAlignment="Top"  TextWrapping="Wrap" Margin="10,12,0,0" Width="100" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_end_previous_period_long_term" HorizontalAlignment="Center" VerticalAlignment="Top"  TextWrapping="Wrap" Margin="0,12,0,0" Width="100" TextChanged="OnTextChange"/>
+                        <TextBox x:Name="tb_end_previous_period_overdue" HorizontalAlignment="Left"  VerticalAlignment="Top"  TextWrapping="Wrap" Margin="278,12,0,0" Width="100" TextChanged="OnTextChange"/>
 
                     </Grid>
                 </GroupBox>
