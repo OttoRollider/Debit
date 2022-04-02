@@ -16,9 +16,9 @@
             <sys:String>На начало года долгосрочная</sys:String>
             <sys:String>На начало года просроченная</sys:String>
             <sys:String>Увеличение задолжености всего</sys:String>
-            <sys:String>Увеличение задолжености в том числе надёжные</sys:String>
+            <sys:String>Увеличение задолжености в том числе неденежные</sys:String>
             <sys:String>Уменьшение задолжености всего</sys:String>
-            <sys:String>Уменьшение задолжености в том числе надёжные</sys:String>
+            <sys:String>Уменьшение задолжености в том числе неденежные</sys:String>
             <sys:String>На конец отчетного периода всего</sys:String>
             <sys:String>На конец отчетного периода долгосрочная</sys:String>
             <sys:String>На конец отчетного периода просроченная</sys:String>

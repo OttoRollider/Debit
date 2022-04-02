@@ -24,7 +24,9 @@ namespace Debit.Helper
 
         private void SelectFilter(object sender, SelectionChangedEventArgs e)
         {
-            var propertyName = DbWriter.GetStructDBProperty()[cboxTableDiff.SelectedIndex].Name;
+            int IndexFirstSummProperty = 4; // Пропускаем первые 4 свойства, в которых хранятся данные об учреждении
+            var propertyName = DbWriter.GetStructDBProperty()[cboxTableDiff.SelectedIndex + IndexFirstSummProperty].Name;
+
             tbDep1.Text = _structDbs[0].GetType().GetProperty(propertyName).GetValue(_structDbs[0]).ToString();
             tbDep2.Text = _structDbs[1].GetType().GetProperty(propertyName).GetValue(_structDbs[1]).ToString();
 
@@ -37,21 +39,15 @@ namespace Debit.Helper
             var less = new SolidColorBrush(Color.FromArgb(255, 153, 7, 22)); //red
             var equal = new SolidColorBrush(Color.FromArgb(255, 0, 107, 153)); //blue
 
-            //TODO: Переопределив привзяку в ItemSource комбобокса, можно будет окончательно избавиться от try-catch
-            try
-            {
-                var firstValue = Convert.ToDecimal(firstColumn);
-                var secondValue = Convert.ToDecimal(secondColumn);
+            var firstValue = Convert.ToDecimal(firstColumn);
+            var secondValue = Convert.ToDecimal(secondColumn);
 
-                if (firstValue > secondValue)
-                    ChangeGroupBoxBorderColor(">", better, less);
-                else if (firstValue < secondValue)
-                    ChangeGroupBoxBorderColor("<", less, better);
-                else
-                    ChangeGroupBoxBorderColor("==", equal, equal);
-
-            }
-            catch { }
+            if (firstValue > secondValue)
+                ChangeGroupBoxBorderColor(">", better, less);
+            else if (firstValue < secondValue)
+                ChangeGroupBoxBorderColor("<", less, better);
+            else
+                ChangeGroupBoxBorderColor("==", equal, equal);
         }
 
         private void ChangeGroupBoxBorderColor(string comparisonSign, SolidColorBrush firstGrBorderColor, SolidColorBrush secondGrBorderColor)

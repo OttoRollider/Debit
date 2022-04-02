@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Debit.Helper
 {
-    public class InteractionWithView
+    public static class InteractionWithView
     {
         /// <summary>
         /// Finding text boxes in main window

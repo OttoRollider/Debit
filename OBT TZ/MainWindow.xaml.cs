@@ -114,7 +114,7 @@ namespace Debit
         {
             using (DbConnector dbConnector = new DbConnector())
             {
-                // создаем объект вручную
+                // Assigning values to properties
                 StructDb structDb = new StructDb
                 {
                     #region Новый экземпляр класса занесённый руками
@@ -138,7 +138,7 @@ namespace Debit
                     #endregion
                 };
 
-                // добавляем бд
+                // Adding data from text boxes to db
                 dbConnector.money_debit.Add(structDb);
                 dbConnector.SaveChanges();
 
@@ -146,6 +146,8 @@ namespace Debit
                 {
                     textBox.Clear();
                 }
+
+                UpdateData(sender, e);
             }
         }
 
@@ -154,12 +156,11 @@ namespace Debit
             DbDataCollection.Clear();
             using (DbConnector dbConnector = new DbConnector())
             {
-                // получаем объекты из бд и выводим в ListView
+                // Getting data from DB and output then in ListView
                 var debit = dbConnector.money_debit.ToList();
                 _listViewContent.AddDataToObservableCollection(debit);
                 _listViewContent.AddDataToListView();
             }
-            //TODO: Разобраться с CollectionViewSource и CollectionView. Может стоит создать сразу экземпляр класса CollectionViewSource, а не CollectionView
             _collectionView = (CollectionView)CollectionViewSource.GetDefaultView(DbDataCollection);
             _collectionView.Filter = DataBaseFilter;
 
