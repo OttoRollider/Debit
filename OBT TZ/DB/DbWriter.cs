@@ -17,7 +17,6 @@ namespace Debit.DB
         /// Метод считывания строк из txt файла
         /// </summary>
         /// <param name="paths"></param>
-        //TODO: Подумать, как вынести запись в прогресс бар и лейбл в отдельный класс или метод
         public async void ReadingTxt(string[] paths, ProgressBar progressBar, Label label)
         {
             foreach (string path in paths)

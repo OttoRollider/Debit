@@ -55,14 +55,6 @@ namespace Debit
             dbListView.MouseRightButtonUp += ContextMenu;
         }
 
-        //TODO:Метод ничего не сортирует. Доработать.
-        private void SortHeaderClick(object sender, RoutedEventArgs e)
-        {
-            var position = PointToScreen(Mouse.GetPosition(this));
-            var column = ((GridViewColumnHeader)e.OriginalSource).Column.Header.ToString();
-
-        }
-
         private void ContextMenu(object sender, MouseButtonEventArgs e)
         {
             var focusItem = e.OriginalSource as StructDb;
@@ -180,7 +172,7 @@ namespace Debit
             if (openFileDialog.ShowDialog().Value == true)
                 new DbWriter().ReadingTxt(openFileDialog.FileNames, pbReadTxt, lbProgressReadTxt);
         }
-        //TODO: При удалении одной добавленной записи из нескольких удаляются все. Добавленные записи одинаковые. Разобраться.
+
         private void RemoveData(object sender, RoutedEventArgs e)
         {
             using (DbConnector dbConnector = new DbConnector())

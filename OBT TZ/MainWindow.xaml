@@ -71,7 +71,7 @@
 
 
         <ListView x:Name="dbListView" Margin="10,93,10,306" Grid.ColumnSpan="2"
-                  d:ItemsSource="{d:SampleData ItemCount=5}" GridViewColumnHeader.Click="SortHeaderClick">
+                  d:ItemsSource="{d:SampleData ItemCount=5}">
             <ListView.Resources>
                 <DataTemplate x:Key="VerTemplate">
                     <Border BorderBrush="Gray" BorderThickness="1,0,0,0" Margin="-6,-2,-8,-2">
