@@ -12,7 +12,7 @@ namespace Debit.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=92.241.230.143;Port=5432;Database=money_deb;Username=postgres;Password=019925");
+            optionsBuilder.UseNpgsql("Host=12.421.654.777;Port=5432;Database=money_deb;Username=adawd;Password=21321");
         }
     }
 }
